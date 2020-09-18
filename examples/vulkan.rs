@@ -26,18 +26,15 @@ use vk_sys::{
     Result as VkResult,
 };
 
-use glfw::Context;
-
 fn main() {
     let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
 
     glfw.window_hint(glfw::WindowHint::Visible(true));
+    glfw.window_hint(glfw::WindowHint::ClientApi(glfw::ClientApiHint::NoApi));
 
     let (mut window, _) = glfw
         .create_window(640, 480, "Defaults", glfw::WindowMode::Windowed)
         .expect("Failed to create GLFW window.");
-
-    window.make_current();
 
     assert!(glfw.vulkan_supported());
 
@@ -61,6 +58,8 @@ fn main() {
     });
 
     //Load other pointers and do other Vulkan stuff here
+    let mut surface = 0 as u64;
+    window.create_window_surface(instance, ptr::null(), &mut surface);
 
     unsafe {
         destroy_instance(instance, &mut instance_ptrs);
